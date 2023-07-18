@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>TODOLIST</title>
+</head>
+
+<body>
+    <section style="background-color: #b3b0b0;">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col col-xl-10">
+
+                    <div class="card" style="border-radius: 15px;">
+                        <div class="card-body p-5">
+
+                            <h2 class="mb-3" style="text-align: center"> Todo List</h2>
+
+                            <form style="position: relative;"
+                                class="d-flex justify-content-center align-items-center mb-4"
+                                action="http://localhost:4000/api/v1/todos" method="POST" enctype="multipart/form-data">
+                                <div class="form-outline flex-fill">
+                                    <input style="width: 80%; margin: 0 auto;" name="title" type="text" id="form3"
+                                        class="form-control form-control-lg" />
+                                    <label style="margin-left: 40% !important" class="form-label" for="form3">What do
+                                        you need to
+                                        do today?</label>
+                                </div>
+                                <button style="position: absolute; left: 90%; bottom: 40%" type="submit"
+                                    class="btn btn-primary btn-lg ms-2">Add</button>
+                            </form>
+
+                            <ul class="list-group mb-0">
+                                {{todoContent}}
+                            </ul>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    <script>
+        function deleteTodo(event, todoId) {
+            fetch('http://localhost:4000/api/v1/todos/' + todoId, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    response.json()
+                    if (response.status == 200) {
+                        event.target.parentElement.remove();
+                    }
+                })
+                .then(response => {
+                    console.log("response", response)
+                })
+        }
+        function handleChange(event, todoId) {
+            fetch('http://localhost:4000/api/v1/todos/' + todoId, {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    completed: event.target.checked
+                }),
+                headers: new Headers({
+                    "Content-Type": "application/json; charset=UTF-8"
+                })
+            })
+
+                .then(res => {
+                    res.json()
+                    if (res.status == 200) {
+                        if (event.target.checked) {
+                            event.target.parentElement.style.textDecoration = "line-through"
+                        } else {
+                            event.target.parentElement.style.textDecoration = "none"
+                        }
+                    }
+                })
+                .then(response => {
+                    console.log("response", response)
+                })
+        }
+    </script>
+</body>
+</body>
+
+</html>
